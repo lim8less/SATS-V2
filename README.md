@@ -1,24 +1,28 @@
 # SATS Traffic Simulation & Optimization
 
-## Overview
-This project simulates and optimizes traffic light control at intersections using SUMO (Simulation of Urban MObility) and machine learning. The system collects real-time traffic data, trains an LSTM-based model to predict optimal traffic light phases, and compares the efficiency of the optimized system against a baseline.
+## Project Description
+SATS (Synchronized Automated Traffic Signaling) is a research and educational project that demonstrates how modern traffic intersections can be optimized using simulation and machine learning. The system uses the SUMO (Simulation of Urban MObility) platform to simulate real-world traffic, collects data on vehicle flow and waiting times, and then applies a deep learning model (LSTM) to predict and optimize traffic light timings. The project provides a full pipeline: from baseline simulation, through model training, to an optimized simulation and a quantitative comparison of results.
 
-## Features
-- **SUMO-based traffic simulation** (with TraCI interface)
-- **Data collection**: Vehicle counts, waiting times, and traffic light states
-- **Machine learning optimization**: LSTM neural network predicts optimal green light durations
-- **Automated efficiency comparison**: Quantifies improvements in waiting time and traffic flow
-- **Comprehensive visualizations**: Plots and metrics for before/after analysis
+Key features:
+- **Realistic traffic simulation** using SUMO and custom network/route files
+- **Automated data collection** of vehicle counts, waiting times, and traffic light states
+- **LSTM-based machine learning** for predicting optimal green light durations
+- **Dynamic generation of SUMO traffic light logic** based on model predictions
+- **Automated efficiency comparison** between baseline and optimized scenarios
+- **Comprehensive visualizations** and metrics for before/after analysis
+
+---
 
 ## Project Structure & File Descriptions
 ```
 SATS-master-main/
+├── main.py                       # Orchestrates the full workflow (run this file)
 ├── algorithm.py                  # ML model training and prediction (uses baseline traffic data)
 ├── finalSimulation.py            # Generates optimized traffic light logic from model predictions
-├── main.py                       # Orchestrates the full workflow (runs all steps)
-├── baseline_final_configuration.sumo.cfg# SUMO config for baseline simulation
-├── final_configuration.sumo.cfg        # SUMO config for optimized simulation
-├── intersection.net.xml         # SUMO network definition (road network)
+├── baselineSimulation.py         # Collects baseline traffic data from SUMO
+├── baseline_configuration.sumo.cfg # SUMO config for baseline simulation
+├── final_configuration.sumo.cfg  # SUMO config for optimized simulation
+├── intersection.net.xml          # SUMO network definition (road network)
 ├── routes.xml                    # SUMO route definitions (vehicle flows)
 ├── trips.trips.xml               # SUMO trip definitions (optional, for demand generation)
 ├── requirements.txt              # Python dependencies
@@ -35,28 +39,79 @@ SATS-master-main/
 └── ...
 ```
 
-### Main Files Explained
-- **main.py**: The entry point. Runs the entire workflow: baseline simulation, ML training, optimized simulation, and efficiency comparison.
-- **algorithm.py**: Trains an LSTM model on collected traffic data (from the baseline simulation) and predicts optimal traffic light timings.
-- **finalSimulation.py**: Reads model predictions and generates a new SUMO traffic light logic XML file for the optimized simulation.
-- **baseline_configuration.sumo.cfg**: SUMO configuration for the baseline simulation (static/default traffic lights).
-- **final_configuration.sumo.cfg**: SUMO configuration for the optimized simulation (uses generated traffic_light_logic.xml).
-- **intersection.net.xml**: SUMO network file describing the road network and intersections.
-- **routes.xml**: Defines vehicle routes and flows for the simulation.
-- **trips.trips.xml**: (Optional) Defines individual vehicle trips for demand generation.
-- **requirements.txt**: Lists all Python dependencies needed for the project.
-- **README.md**: This documentation file.
-- **temp.py**: (Optional) Example or test script, e.g., for GUI prototyping.
+---
 
-### Generated Files (Created During Workflow)
-- **traffic_data_baseline.csv**: Collected traffic data from the baseline simulation (created on first run).
-- **traffic_light_model.h5**: Trained LSTM model for traffic light optimization.
-- **predictions.json**: Model predictions and performance metrics for each junction.
-- **traffic_light_logic.xml**: Optimized traffic light logic for SUMO, generated from model predictions.
-- **final_simulation_metrics.json**: Metrics from the optimized simulation run.
-- **efficiency_comparison.json**: Comparison of baseline and optimized simulation results.
-- **efficiency_analysis.png**: Visual summary of efficiency improvements and model performance.
+## Setup Instructions
+### 1. Prerequisites
+- **Python 3.11+** (recommended: 3.12 for best compatibility)
+- **SUMO** (Simulation of Urban MObility) installed and available in your PATH ([Download here](https://www.eclipse.dev/sumo/))
+- **Conda** (recommended) or `venv` for environment management
+
+### 2. Clone the Repository
+```bash
+git clone https://github.com/lim8less/SATS-V2.git
+cd SATS
+```
+
+### 3. Install Python Dependencies
+```bash
+# Create and activate a conda environment (recommended)
+conda create -n sats-env python=3.8
+conda activate sats-env
+
+# Install required packages
+pip install -r requirements.txt
+```
+
+### 4. SUMO Setup
+- Download and install SUMO from the [official website](https://www.eclipse.dev/sumo/).
+- Ensure `sumo-gui` and `sumo` are available in your system PATH (test with `sumo-gui --help`).
 
 ---
 
-The above structure and descriptions should help you understand the role of each file, what is required to start, and what will be generated as you run the project.
+## How to Run the Project
+1. **Start the workflow:**
+   ```bash
+   python main.py
+   ```
+2. The script will:
+   - Run a baseline SUMO simulation and collect traffic data
+   - Train the LSTM model and generate optimized traffic light logic
+   - Run the optimized simulation
+   - Output efficiency comparison metrics and visualizations
+3. **Check the output files:**
+   - `efficiency_comparison.json` for a summary of improvements
+   - `efficiency_analysis.png` for visualizations
+   - Other generated files as described above
+
+---
+
+## Screenshots
+<!--
+Add screenshots of the SUMO GUI, efficiency_analysis.png, and any other relevant visualizations here.
+Example:
+![SUMO Simulation](screenshots/sumo_gui.png)
+![Efficiency Analysis](screenshots/efficiency_analysis.png)
+-->
+
+---
+
+## Concepts & Algorithms
+- **SUMO & TraCI**: Real-time traffic simulation and control
+- **LSTM (Long Short-Term Memory)**: Sequence modeling for time-series prediction
+- **Feature Engineering**: Creating derived features for better model performance
+- **Model Evaluation**: MSE, MAE, R², and efficiency metrics
+- **Automated Experimentation**: Full pipeline from data collection to evaluation
+
+---
+
+## Troubleshooting
+- Ensure SUMO is installed and accessible from your command line.
+- Use Python 3.12 for best compatibility with TensorFlow and SUMO TraCI.
+- If you encounter missing packages, install them manually using `pip install <package>`.
+- If you see JSON serialization errors, ensure all pandas/numpy values are converted to native Python types before writing to JSON.
+
+---
+
+## Credits
+Developed for research and educational purposes. Integrates open-source tools: SUMO, Keras/TensorFlow, scikit-learn, pandas, and matplotlib.

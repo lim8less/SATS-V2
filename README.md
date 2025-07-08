@@ -56,7 +56,7 @@ cd SATS
 ### 3. Install Python Dependencies
 ```bash
 # Create and activate a conda environment (recommended)
-conda create -n sats-env python=3.8
+conda create -n sats-env python=3.12
 conda activate sats-env
 
 # Install required packages
